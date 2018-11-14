@@ -20,7 +20,7 @@ label = np.zeros((1,1))
 tf.reset_default_graph()
 
 def unpickle(file):
-    import _pickle as pickle
+    import pickle
     with open(file, 'rb') as fo:
         dict = pickle.load(fo, encoding='latin1')
     return dict
