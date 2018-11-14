@@ -19,6 +19,11 @@ image = np.zeros((1,3072))
 label = np.zeros((1,1))
 tf.reset_default_graph()
 
+flags = tf.app.flags
+FLAGS = flags.FLAGS
+flags.DEFINE_string('input_dir', 'input', 'Input Directory.')
+
+
 def unpickle(file):
     import pickle
     with open(file, 'rb') as fo:
@@ -27,7 +32,7 @@ def unpickle(file):
 
 
 for i in range(1,6):
-    a = unpickle("data_batch_"+str(i))
+    a = unpickle(FLAGS.input_dir+"\data_bin_"+str(i))
     r = a['data'][:,0:1024].reshape((-1,1))
     g = a['data'][:,1024:2048].reshape((-1,1))
     b = a['data'][:,2048:3072].reshape((-1,1))
