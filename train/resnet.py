@@ -9,9 +9,7 @@ import random
 import tensorflow as tf
 import os
 from glob import glob
-from PIL import Image
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 EPOCHS = 10
