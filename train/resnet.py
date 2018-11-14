@@ -32,7 +32,7 @@ def unpickle(file):
 
 
 for i in range(1,6):
-    a = unpickle(FLAGS.input_dir+"/data_batch_"+str(i))
+    a = unpickle(FLAGS.input_dir+"\\data_batch_"+str(i))
     r = a['data'][:,0:1024].reshape((-1,1))
     g = a['data'][:,1024:2048].reshape((-1,1))
     b = a['data'][:,2048:3072].reshape((-1,1))
