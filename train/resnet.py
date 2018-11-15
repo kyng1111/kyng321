@@ -28,13 +28,13 @@ flags.DEFINE_string('input_dir', 'input', 'Input Directory.')
 def unpickle(file):
     import pickle
     with open(file, 'rb') as fo:
-        dict = pickle.load(fo, encoding='latin1')
+        dict = pickle.load(fo)
     return dict
 
 
 for i in range(1,6):
     path = os.path.join(FLAGS.input_dir,"data_batch_"+str(i))    
-    with file_io.FileIO(path, 'rb') as f:
+    with file_io.FileIO(path, 'r') as f:
       a = unpickle(f)
     r = a['data'][:,0:1024].reshape((-1,1))
     g = a['data'][:,1024:2048].reshape((-1,1))
