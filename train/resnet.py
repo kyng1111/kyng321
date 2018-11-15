@@ -12,9 +12,6 @@ from glob import glob
 import numpy as np
 from tensorflow.python.lib.io import file_io
 
-with file_io.FileIO(args.wavenet_params, 'r') as f:
-  wavenet_params = json.load(f)
-
 
 EPOCHS = 10
 batch_size = 1000
