@@ -10,6 +10,10 @@ import tensorflow as tf
 import os
 from glob import glob
 import numpy as np
+from tensorflow.python.lib.io import file_io
+
+with file_io.FileIO(args.wavenet_params, 'r') as f:
+  wavenet_params = json.load(f)
 
 
 EPOCHS = 10
@@ -32,7 +36,9 @@ def unpickle(file):
 
 
 for i in range(1,6):
-    a = unpickle(os.path.join(FLAGS.input_dir,"data_batch_"+str(i)))
+    path = os.path.join(FLAGS.input_dir,"data_batch_"+str(i))    
+    with file_io.FileIO(path, 'rb') as f:
+      a = unpickle(f)
     r = a['data'][:,0:1024].reshape((-1,1))
     g = a['data'][:,1024:2048].reshape((-1,1))
     b = a['data'][:,2048:3072].reshape((-1,1))
