@@ -27,8 +27,8 @@ flags.DEFINE_string('input_dir', 'input', 'Input Directory.')
 
 def unpickle(file):
     import pickle
-    with file_io.FileIO(file, mode="rb") as fo:
-        dict = pickle.load(fo)
+    with file_io.FileIO(file, 'rb') as fo:
+        dict = pickle.load(fo, encoding='latin1')
     return dict
 
 
