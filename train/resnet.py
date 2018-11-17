@@ -33,9 +33,8 @@ def unpickle(file):
 
 
 for i in range(1,6):
-    path = os.path.join(FLAGS.input_dir,"data_batch_"+str(i))    
-    with file_io.FileIO(path, 'r') as f:
-      a = unpickle(f)
+    path = os.path.join(FLAGS.input_dir,"data_batch_"+str(i))
+    a = unpickle(path)
     r = a['data'][:,0:1024].reshape((-1,1))
     g = a['data'][:,1024:2048].reshape((-1,1))
     b = a['data'][:,2048:3072].reshape((-1,1))
