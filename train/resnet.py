@@ -32,7 +32,7 @@ def unpickle(file):
     return dict
 
 
-for i in range(1):
+for i in range(1,1):
     path = os.path.join(FLAGS.input_dir,"data_batch_"+str(i))
     a = unpickle(path)
     r = a['data'][:,0:1024].reshape((-1,1))
