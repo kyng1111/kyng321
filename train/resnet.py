@@ -133,7 +133,7 @@ class resnet:
                     total_cost += cost_value
                     print(str(i)+'-'+str(j))
                 print("iter:{}, cost:{:.4f}".format(i, total_cost/n_batch))
-                    
+            saver = tf.train.Saver()
             checkpoint_file = os.path.join(FLAGS.output_dir, 'checkpoint')
             saver.save(sess, checkpoint_file, global_step=0)
 a = resnet()
