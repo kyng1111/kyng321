@@ -102,47 +102,47 @@ class resnet:
 
         with tf.variable_scope("fc"):
             net = tf.reduce_mean(net,[1,2])
-            logits = tf.layers.dense(net, 10, kernel_initializer=tf.contrib.layers.variance_scaling_initializer(seed=self.seed))
+            logits = tf.layers.dense(net, 10, kernel_initializer=tf.contrib.layers.variance_scaling_initializer(seed=self.seed),name="logits")
         return logits
     
     def __init__(self, name = 'resnet',learning_rate =0.001, layer_n=15, SEED=777):
-        
-        self.x = tf.placeholder(dtype = tf.float32, shape=[None,3072], name = 'x_data')
-        self.y = tf.placeholder(dtype = tf.uint8, shape=[None,1], name = 'y_label')
-        self.y_onehot = tf.one_hot(self.y,depth=10)
-        self.y_onehot1 = tf.reshape(self.y_onehot,([-1,10]))
-        self.x_img = tf.reshape(self.x,[-1,32,32,3])
-        self.training = tf.placeholder(dtype = tf.bool, name = 'training')
-        self.seed = SEED
-        
-        self.dataset = tf.data.Dataset.from_tensor_slices((self.x_img,self.y_onehot1))
-        self.dataset = self.dataset.repeat()
-        self.dataset = self.dataset.shuffle(100000)
-        self.dataset = self.dataset.batch(batch_size)
-        
-        iter = self.dataset.make_initializable_iterator()
-        
-        self.dataset_init_op = iter.make_initializer(self.dataset,name = 'dataset_init')
-        x_image, y_label = iter.get_next()
-        
-        self.logits = self.build_net(x_image, layer_n = layer_n)
-        
-        self.cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits = self.logits, labels = y_label))
-        self.optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate).minimize(self.cost)
-        
-        with tf.Session() as sess:
-            sess.run(tf.global_variables_initializer())
-            sess.run(self.dataset_init_op, feed_dict = {self.x : image, self.y : label})
-            print("학습시작")
-            for i in range(EPOCHS):
-                total_cost = 0
-                for j in range(n_batch):
-                    _, cost_value = sess.run([self.optimizer, self.cost],{self.training:True})
-                    total_cost += cost_value
-                    print(str(i)+'-'+str(j))
-                print("iter:{}, cost:{:.4f}".format(i, total_cost/n_batch))
-            saver = tf.train.Saver()
-            checkpoint_file = os.path.join(FLAGS.output_dir, 'checkpoint')
-            saver.save(sess, checkpoint_file, global_step=0)
+            with tf.variable_scope(name):
+            self.x = tf.placeholder(dtype = tf.float32, shape=[None,3072], name = 'x_data')
+            self.y = tf.placeholder(dtype = tf.uint8, shape=[None,1], name = 'y_label')
+            self.y_onehot = tf.one_hot(self.y,depth=10)
+            self.y_onehot1 = tf.reshape(self.y_onehot,([-1,10]))
+            self.x_img = tf.reshape(self.x,[-1,32,32,3])
+            self.training = tf.placeholder(dtype = tf.bool, name = 'training')
+            self.seed = SEED
+
+            self.dataset = tf.data.Dataset.from_tensor_slices((self.x_img,self.y_onehot1))
+            self.dataset = self.dataset.repeat()
+            self.dataset = self.dataset.shuffle(100000)
+            self.dataset = self.dataset.batch(batch_size)
+
+            iter = self.dataset.make_initializable_iterator()
+
+            self.dataset_init_op = iter.make_initializer(self.dataset,name = 'dataset_init')
+            x_image, y_label = iter.get_next()
+
+            self.logits = self.build_net(x_image, layer_n = layer_n)
+
+            self.cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits = self.logits, labels = y_label))
+            self.optimizer = tf.train.AdamOptimizer(learning_rate = learning_rate).minimize(self.cost)
+
+            with tf.Session() as sess:
+                sess.run(tf.global_variables_initializer())
+                sess.run(self.dataset_init_op, feed_dict = {self.x : image, self.y : label})
+                print("학습시작")
+                for i in range(EPOCHS):
+                    total_cost = 0
+                    for j in range(n_batch):
+                        _, cost_value = sess.run([self.optimizer, self.cost],{self.training:True})
+                        total_cost += cost_value
+                        print(str(i)+'-'+str(j))
+                    print("iter:{}, cost:{:.4f}".format(i, total_cost/n_batch))
+                saver = tf.train.Saver()
+                checkpoint_file = os.path.join(FLAGS.output_dir, 'checkpoint')
+                saver.save(sess, checkpoint_file, global_step=0)
 a = resnet()
 
