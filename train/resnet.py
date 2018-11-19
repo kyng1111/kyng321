@@ -52,6 +52,10 @@ for i in range(1,6):
     image = np.vstack((image1,image))
     label = np.vstack((label1,label))
 
+print(image.shape)
+print(label.shape)
+
+
 class resnet:
     def residual_block(self, x, output_channel, downsampling=False, name = 'res_block'):
         if downsampling:
@@ -142,13 +146,3 @@ class resnet:
             saver.save(sess, checkpoint_file, global_step=0)
 a = resnet()
 
-
-def main(_):
-
-    print(image.shape)
-    print(label.shape)
-    
-    k = resnet()
-
-if __name__ == '__main__':
-    tf.app.run()
