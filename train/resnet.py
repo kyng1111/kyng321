@@ -77,7 +77,7 @@ class resnet:
                 x = tf.layers.conv2d(x,output_channel,[1,1],strides = stride, padding='SAME',use_bias = False,
                                       kernel_initializer=tf.contrib.layers.variance_scaling_initializer(seed=self.seed))
             
-            return h2 + x
+            return tf.nn.relu(h2 + x)
     
     def build_net(self, x_img, layer_n):
         net = x_img
