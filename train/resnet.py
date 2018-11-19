@@ -25,6 +25,12 @@ image = np.zeros((1,3072))
 label = np.zeros((1,1))
 tf.reset_default_graph()
 
+def unpickle(file):
+    import pickle
+    with file_io.FileIO(file,'rb') as fo:
+        dict = pickle.load(fo, encoding='latin1')
+    return dict
+
 for i in range(1,6):
     path = os.path.join(FLAGS.input_dir,"data_batch_"+str(i))
     a = unpickle(path)
@@ -36,15 +42,6 @@ for i in range(1,6):
     label1 = l
     image = np.vstack((image1,image))
     label = np.vstack((label1,label))
-
-
-
-
-def unpickle(file):
-    import pickle
-    with file_io.FileIO(file,'rb') as fo:
-        dict = pickle.load(fo, encoding='latin1')
-    return dict
 
 class resnet:
     def residual_block(self, x, output_channel, downsampling=False, name = 'res_block'):
