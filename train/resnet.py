@@ -23,7 +23,7 @@ tf.reset_default_graph()
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 flags.DEFINE_string('input_dir', 'input', 'Input Directory.')
-
+flags.DEFINE_string('output_dir', 'output', 'Output Directory.')
 
 def unpickle(file):
     import pickle
@@ -134,6 +134,13 @@ class resnet:
                     print(str(i)+'-'+str(j))
                 print("iter:{}, cost:{:.4f}".format(i, total_cost/n_batch))
                     
-            saver = tf.train.Saver()
-            save_path = saver.save(sess, "./resnet.ckpt")
+            checkpoint_file = os.path.join(FLAGS.output_dir, 'checkpoint')
+            saver.save(sess, checkpoint_file, global_step=0)
 a = resnet()
+
+
+def main(_):
+    run_training()
+
+if __name__ == '__main__':
+    tf.app.run()
