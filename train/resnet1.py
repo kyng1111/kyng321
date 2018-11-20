@@ -12,6 +12,7 @@ batch_size = 1000
 n_batch = 50
 image = np.zeros((1,3072))
 label = np.zeros((1,1))
+learning_rate = 0.001
 tf.reset_default_graph()
 
 keep_prob=tf.placeholder_with_default(1.0, shape=())
