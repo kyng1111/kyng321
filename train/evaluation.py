@@ -46,7 +46,7 @@ label1 = l
 
 sess=tf.Session()    
 #First let's load meta graph and restore weights
-saver = tf.train.import_meta_graph('gs://okaygood1/output/output_cifar_model.ckpt-0.meta')
+saver = tf.train.import_meta_graph('gs://okaygood1/output/cifar_model.ckpt-0.meta')
 saver.restore(sess,tf.train.latest_checkpoint('gs://okaygood1/output/'))
 
 graph = tf.get_default_graph()
