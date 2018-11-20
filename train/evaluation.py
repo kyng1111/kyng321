@@ -40,7 +40,7 @@ g = a['data'][:,1024:2048].reshape((-1,1))
 b = a['data'][:,2048:3072].reshape((-1,1))
 l = np.array(a['labels']).reshape((-1,1))
 image1 = np.hstack([r,g,b]).reshape((-1,32,32,3))
-label1 = l
+label1 = l.reshape(-1)
 
 nb_classes = 10
 one_hot_targets = np.eye(nb_classes)[label1]
