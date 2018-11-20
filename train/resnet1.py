@@ -154,8 +154,7 @@ class ResNet:
                     print("Iter: {}, Loss: {:.4f}".format(i, tot_cost / n_batches)) # 한 배치당 cost
 
                 saver = tf.train.Saver()
-                checkpoint_file = os.path.join(FLAGS.output_dir, 'checkpoint')
-                saver.save(sess, checkpoint_file, global_step=0)
+                saver.save(sess, "gs://okaygood1/output/cifar_model.ckpt", global_step=0)
                 print("finished")
 
 
