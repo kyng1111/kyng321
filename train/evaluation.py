@@ -39,7 +39,7 @@ r = a['data'][:,0:1024].reshape((-1,1))
 g = a['data'][:,1024:2048].reshape((-1,1))
 b = a['data'][:,2048:3072].reshape((-1,1))
 l = np.array(a['labels']).reshape((-1,1))
-image1 = np.hstack([r,g,b])
+image1 = np.hstack([r,g,b]).reshape((-1,32,32,3))
 label1 = l
 
 
