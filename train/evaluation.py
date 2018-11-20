@@ -42,6 +42,9 @@ l = np.array(a['labels']).reshape((-1,1))
 image1 = np.hstack([r,g,b]).reshape((-1,32,32,3))
 label1 = l
 
+nb_classes = 10
+one_hot_targets = np.eye(nb_classes)[label1]
+
 
 
 sess=tf.Session()    
@@ -62,4 +65,4 @@ Y = graph.get_tensor_by_name("resnet/IteratorGetNext:1")
 i = random.randint(1,9800)
 
 print("Prediction: ", sess.run(tf.argmax(logits, 1), feed_dict={X: image1[i].reshape((1,32,32,3)), training:True}))
-print("Real_Value: ", sess.run(Y, feed_dict={Y : label1[i]}))
+print("Real_Value: ", sess.run(tf.argmax(Y,1), feed_dict={Y : one_hot_targets[i]}))
