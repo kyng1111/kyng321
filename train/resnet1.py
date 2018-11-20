@@ -156,7 +156,7 @@ class ResNet:
                 saver = tf.train.Saver()
                 checkpoint_file = os.path.join(FLAGS.output_dir, 'checkpoint')
                 saver.save(sess, checkpoint_file, global_step=0)
-                print("저장 끝")
+                print("finished")
 
 
 
