@@ -6,14 +6,12 @@ Created on Wed Nov  7 00:32:02 2018
 """
 
 import os
-from PIL import Image
 import tensorflow as tf
 from glob import glob
 import numpy as np
 import random
 import matplotlib.pyplot as plt
 from tensorflow.python.lib.io import file_io
-import random
 
 tf.reset_default_graph()
 
@@ -61,7 +59,7 @@ X = graph.get_tensor_by_name("IteratorGetNext:0")
 # finally call session to run 
 
 
+i = random.randint(1,500)
 
-
-print("Prediction: ", sess.run(tf.argmax(logits, 1), feed_dict={X: image1[1], training:True}))
-print(label1[1])
+print("Prediction: ", sess.run(tf.argmax(logits, 1), feed_dict={X: image1[i], training:True}))
+print(label1[i])
