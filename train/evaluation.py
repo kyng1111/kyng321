@@ -58,7 +58,7 @@ X = graph.get_tensor_by_name("resnet/IteratorGetNext:0")
 # finally call session to run 
 
 
-i = random.randint(1,500)
+i = random.randint(1,9800)
 
 print("Prediction: ", sess.run(tf.argmax(logits, 1), feed_dict={X: image1[i].reshape((1,32,32,3)), training:True}))
 print(label1[i])
