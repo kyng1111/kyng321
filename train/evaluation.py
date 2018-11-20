@@ -53,7 +53,7 @@ graph = tf.get_default_graph()
 
 training = graph.get_tensor_by_name("resnet/training:0")
 logits = graph.get_tensor_by_name("resnet/fc/logits/MatMul:0")
-X = graph.get_tensor_by_name("IteratorGetNext:0")
+X = graph.get_tensor_by_name("resnet/IteratorGetNext:0")
 # difine the target tensor you want evaluate for your prediction
 # finally call session to run 
 
