@@ -64,6 +64,6 @@ Y = graph.get_tensor_by_name("resnet/IteratorGetNext:1")
 correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(Y, 1))
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 print('Accuracy:', sess.run(accuracy, feed_dict={
-      X: image1, Y: one_hot_targets}))
+      X: image1, Y: one_hot_targets, training:True}))
 
 
