@@ -14,19 +14,12 @@ image = np.zeros((1,3072))
 label = np.zeros((1,1))
 tf.reset_default_graph()
 
-
+keep_prob=tf.placeholder_with_default(1.0, shape=())
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 flags.DEFINE_string('input_dir', 'input', 'Input Directory.')
 flags.DEFINE_string('output_dir', 'output', 'Output Directory.')
 
-
-EPOCHS = 10
-batch_size = 1000
-n_batch = 50
-image = np.zeros((1,3072))
-label = np.zeros((1,1))
-tf.reset_default_graph()
 
 def unpickle(file):
     import pickle
