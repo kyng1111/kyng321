@@ -108,7 +108,7 @@ class ResNet:
 
         return logits
     
-    def __init__(self, name='resnet', learning_rate=0.001, layer_n=3, SEED=777):
+    def __init__(self, name='resnet', learning_rate=0.001, layer_n=100, SEED=777):
         with tf.variable_scope(name):
             self.x = tf.placeholder(tf.float32, [None,3072], name='x_data')  # 데이터(사진)가 담길 그릇 32x32x3
             x_img = tf.reshape(self.x,[-1, 32, 32, 3]) 
