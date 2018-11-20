@@ -9,7 +9,7 @@ from tensorflow.python.lib.io import file_io
 
 EPOCHS = 10
 batch_size = 100
-n_batches = 50
+n_batches = 500
 image = np.zeros((1,3072))
 label = np.zeros((1,1))
 learning_rate = 0.001
