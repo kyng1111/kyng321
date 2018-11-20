@@ -39,7 +39,7 @@ r = a['data'][:,0:1024].reshape((-1,1))
 g = a['data'][:,1024:2048].reshape((-1,1))
 b = a['data'][:,2048:3072].reshape((-1,1))
 l = np.array(a['labels']).reshape((-1,1))
-image1 = np.hstack([r,g,b]).reshape((-1,32,32,3))
+image1 = np.hstack([r,g,b]).reshape((-1,3072))
 label1 = l
 
 nb_classes = 10
@@ -61,8 +61,9 @@ Y = graph.get_tensor_by_name("resnet/IteratorGetNext:1")
 # difine the target tensor you want evaluate for your prediction
 # finally call session to run 
 
+correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(Y, 1))
+accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+print('Accuracy:', sess.run(accuracy, feed_dict={
+      X: image1, Y: one_hot_targets}))
 
-i = random.randint(1,9800)
 
-print("Prediction: ", sess.run(tf.argmax(logits, 1), feed_dict={X: image1[i].reshape((1,32,32,3)), training:True}))
-print("Real_Value: ", sess.run(tf.argmax(Y,1), feed_dict={Y : one_hot_targets[i]}))
