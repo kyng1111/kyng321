@@ -54,6 +54,7 @@ graph = tf.get_default_graph()
 training = graph.get_tensor_by_name("resnet/training:0")
 logits = graph.get_tensor_by_name("resnet/fc/logits/MatMul:0")
 X = graph.get_tensor_by_name("resnet/IteratorGetNext:0")
+Y = graph.get_tensor_by_name("resnet/IteratorGetNext:1")
 # difine the target tensor you want evaluate for your prediction
 # finally call session to run 
 
@@ -61,4 +62,4 @@ X = graph.get_tensor_by_name("resnet/IteratorGetNext:0")
 i = random.randint(1,9800)
 
 print("Prediction: ", sess.run(tf.argmax(logits, 1), feed_dict={X: image1[i].reshape((1,32,32,3)), training:True}))
-print(label1[i])
+print("Real_Value: ", sess.run(Y, feed_dict={Y : label1[i]}))
