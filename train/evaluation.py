@@ -13,27 +13,13 @@ import numpy as np
 import random
 import matplotlib.pyplot as plt
 from tensorflow.python.lib.io import file_io
-
+import random
 
 tf.reset_default_graph()
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 flags.DEFINE_string('input_dir', 'input', 'Input Directory.')
-
-
-def read_image(path):
-    return np.array(Image.open(path))
-
-def _read_pyfunction(path, label):
-    image = read_image(path)
-    label = np.array(label, dtype=np.uint8)
-    return image.astype(np.int32), label
-
-def _resize_function(image_decoded, label):
-    image_decoded.set_shape([None,None,None])
-    image_resized = tf.image.resize_images(image_decoded, [32,32])
-    return image_resized, label
 
 
 def unpickle(file):
@@ -63,8 +49,8 @@ label1 = l
 
 sess=tf.Session()    
 #First let's load meta graph and restore weights
-saver = tf.train.import_meta_graph('output_cifar_model.ckpt-0.meta')
-saver.restore(sess,tf.train.latest_checkpoint('./'))
+saver = tf.train.import_meta_graph('gs://okaygood1/output/output_cifar_model.ckpt-0.meta')
+saver.restore(sess,tf.train.latest_checkpoint('gs://okaygood1/output/'))
 
 graph = tf.get_default_graph()
 
@@ -78,4 +64,4 @@ X = graph.get_tensor_by_name("IteratorGetNext:0")
 
 
 print("Prediction: ", sess.run(tf.argmax(logits, 1), feed_dict={X: image1[1], training:True}))
-print(label1)
+print(label1[1])
