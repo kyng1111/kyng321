@@ -10,7 +10,6 @@ import tensorflow as tf
 from glob import glob
 import numpy as np
 import random
-import matplotlib.pyplot as plt
 from tensorflow.python.lib.io import file_io
 
 tf.reset_default_graph()
