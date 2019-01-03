@@ -36,7 +36,7 @@ learning_rate = 0.01
 path = os.path.join(FLAGS.input_dir,"final_input.txt")
 
 
-a = unpickle("final_input.txt")
+a = unpickle(path)
 dataX = np.array(a).reshape(-1,200)
 
 print(path)
