@@ -76,14 +76,13 @@ outputs, _states = tf.nn.dynamic_rnn(multi_cells, X, dtype=tf.float32)
 # FC layer
 outputs = tf.contrib.layers.fully_connected(outputs[:,-1], num_classes, activation_fn=None)
 
-outputs1 =tf.math.scalar_mul(1, outputs)
-outputs2 = tf.convert_to_tensor(outputs1,name="y_pred")
+outputs1 = tf.convert_to_tensor(outputs,name="y_pred")
 
 
 
 ## sequence_loss = tf.contrib.seq2seq.sequence_loss(logits=outputs, targets=Y, weights=weights)
 
-sequence_loss = tf.reduce_sum(tf.square(outputs2 - Y)) 
+sequence_loss = tf.reduce_sum(tf.square(outputs1 - Y)) 
 
 train_op = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(sequence_loss)
 
