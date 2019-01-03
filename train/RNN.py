@@ -28,7 +28,7 @@ learning_rate = 0.01
 path = os.path.join(FLAGS.input_dir,"final_input.txt")
 
 
-a = unpickle(path)
+a = unpickle("gs://dumo1/input/final_input.txt")
 dataX = np.array(a).reshape(-1,200)
 
 print(path)
@@ -88,7 +88,7 @@ with tf.Session() as sess:
         print(i,l)
     saver = tf.train.Saver()
     checkpoint_file = os.path.join(FLAGS.output_dir,'checkpoint')
-    saver.save(sess, checkpoint_file,global_step=0)
+    saver.save(sess, "gs://dumo1/output/checkpoint",global_step=0)
     
 '''   
 # Let's print the last char of each result to check it works
