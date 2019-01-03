@@ -36,30 +36,29 @@ learning_rate = 0.01
 path = os.path.join(FLAGS.input_dir,"final_input.txt")
 
 
-a = unpickle(path)
-b1 = np.array(a).reshape(-1,200)
+a = unpickle("final_input.txt")
+dataX = np.array(a).reshape(-1,200)
 
-print(b1.shape)
 print(path)
 
 
-dataX = []
-dataY = []
 
-dataX = b1[0:-1]
-dataY = b1[1:]
 
-batch_size = len(dataX)
-
-testX = []
-testY = []
+tempX = []
+tempY = []
 
 for i in range(0,len(dataX) - 10):
     _x = dataX[i:i+10]
-    _y = dataY[i+10]
-    testX.append(_x)
-    testY.append(_y)
-    
+    _y = dataX[i+10]
+    tempX.append(_x)
+    tempY.append(_y)
+
+testX = np.array(tempX)
+testY = np.array(tempY)
+print(testX.shape)
+print(testY.shape)
+
+batch_size = len(testX)
 
 X = tf.placeholder(tf.float32, [None,10,200],name = 'x_data')
 Y = tf.placeholder(tf.float32, [None,200],name = 'y_data')
@@ -75,11 +74,16 @@ multi_cells = rnn.MultiRNNCell([lstm_cell() for _ in range(2)], state_is_tuple=T
 outputs, _states = tf.nn.dynamic_rnn(multi_cells, X, dtype=tf.float32)
     
 # FC layer
-outputs = tf.contrib.layers.fully_connected(outputs[:,-1], num_classes, activation_fn=None,name="outputs")
+outputs = tf.contrib.layers.fully_connected(outputs[:,-1], num_classes, activation_fn=None)
+
+outputs1 =tf.math.scalar_mul(1, outputs)
+outputs2 = tf.convert_to_tensor(outputs1,name="y_pred")
+
+
 
 ## sequence_loss = tf.contrib.seq2seq.sequence_loss(logits=outputs, targets=Y, weights=weights)
 
-sequence_loss = tf.reduce_sum(tf.square(outputs - Y)) 
+sequence_loss = tf.reduce_sum(tf.square(outputs2 - Y)) 
 
 train_op = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(sequence_loss)
 
