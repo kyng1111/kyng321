@@ -6,12 +6,6 @@ from glob import glob
 from tensorflow.python.lib.io import file_io
 import pickle
 
-def del_all_flags(FLAGS):
-    flags_dict = FLAGS._flags()    
-    keys_list = [keys for keys in flags_dict]    
-    for keys in keys_list:
-        FLAGS.__delattr__(keys)
-
 
 def unpickle(file):
     with file_io.FileIO(file,'rb') as fo:
@@ -21,8 +15,6 @@ def unpickle(file):
 tf.reset_default_graph()
 
 tf.set_random_seed(777)  # reproducibility
-
-del_all_flags(tf.flags.FLAGS)
 
 flags=tf.app.flags
 FLAGS = flags.FLAGS
