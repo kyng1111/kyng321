@@ -5,3 +5,4 @@ trainingInput:
   parameterServerType: complex_model_l_gpu
   workerCount: 3
   parameterServerCount: 3
+  runtimeVersion: "1.4" 
