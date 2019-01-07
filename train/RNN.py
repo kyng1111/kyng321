@@ -30,7 +30,7 @@ num_classes = 200
 learning_rate = 0.01
 
 
-a = unpickle("final_input.txt")
+a = unpickle("gs://dumo1/input/final_input.txt")
 dataX = np.array(a).reshape(-1,200)
 
 tempX = []
@@ -97,7 +97,7 @@ with tf.Session() as sess:
         print(str(i), str(tot_cost))
         
     saver = tf.train.Saver()
-    saver.save(sess, "checkpoint",global_step=0)
+    saver.save(sess, "gs://dumo1/output/checkpoint",global_step=0)
     
 '''   
 # Let's print the last char of each result to check it works
