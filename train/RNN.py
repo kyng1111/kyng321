@@ -99,8 +99,7 @@ with tf.Session() as sess:
         for j in range(10000):
             _, l, results = sess.run([train_op, sequence_loss, outputs])
             tot_cost += l
-            print(str(i)+"-"+str(j))
-        print(str(i), str(tot_cost))
+        print("Iter: {}, Loss: {:.4f}".format(i, tot_cost)
         
     saver = tf.train.Saver()    
     checkpoint_file = os.path.join(FLAGS.output_dir, 'RNN_check')
