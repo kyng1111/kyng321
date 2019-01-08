@@ -21,5 +21,5 @@ with tf.Session() as sess:
 
     # Create a saver for writing training checkpoints.
     saver = tf.train.Saver()
-    checkpoint_file = os.path.join(FLAGS.output_dir, 'checkpoint1')
+    checkpoint_file = os.path.join(FLAGS.output_dir, 'RNN')
     saver.save(sess, checkpoint_file,global_step=0)
