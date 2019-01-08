@@ -20,6 +20,11 @@ def unpickle(file):
         dict = pickle.load(fo)
     return dict
 
+def lstm_cell():
+    cell = rnn.BasicLSTMCell(hidden_size, state_is_tuple=True)
+    return cell
+
+
 tf.reset_default_graph()
 
 tf.set_random_seed(777)  # reproducibility
@@ -56,40 +61,40 @@ print(testY.shape)
 
 batch_size = len(testX)
 
-X = tf.placeholder(tf.float32, [None,10,200],name = 'x_data')
-Y = tf.placeholder(tf.float32, [None,200],name = 'y_data')
 
-dataset = tf.data.Dataset.from_tensor_slices((X,Y))
-dataset = dataset.repeat()
-dataset = dataset.batch(10000)
+with tf.variable_scope("rnn1"):
+    X = tf.placeholder(tf.float32, [None,10,200],name = 'x_data')
+    Y = tf.placeholder(tf.float32, [None,200],name = 'y_data')
 
-iter = dataset.make_initializable_iterator()
-dataset_init_op = iter.make_initializer(dataset,name='dataset_init')
+    dataset = tf.data.Dataset.from_tensor_slices((X,Y))
+    dataset = dataset.repeat()
+    dataset = dataset.batch(10000)
 
-X_, Y_ = iter.get_next()
+    iter = dataset.make_initializable_iterator()
+    dataset_init_op = iter.make_initializer(dataset,name='dataset_init')
 
-# Make a lstm cell with hidden_size (each unit output vector size)
-def lstm_cell():
-    cell = rnn.BasicLSTMCell(hidden_size, state_is_tuple=True)
-    return cell
+    X_, Y_ = iter.get_next()
 
-multi_cells = rnn.MultiRNNCell([lstm_cell() for _ in range(2)], state_is_tuple=True)
 
-# outputs: unfolding size x hidden size, state = hidden size
-outputs, _states = tf.nn.dynamic_rnn(multi_cells, X_, dtype=tf.float32)
+    multi_cells = rnn.MultiRNNCell([lstm_cell() for _ in range(2)], state_is_tuple=True)
+
+    # outputs: unfolding size x hidden size, state = hidden size
+    outputs, _states = tf.nn.dynamic_rnn(multi_cells, X_, dtype=tf.float32)
+
+    # FC layer
+    outputs = tf.contrib.layers.fully_connected(outputs[:,-1], num_classes, activation_fn=None)
+
+    hidden = tf.layers.dense(inputs=outputs,units=200,activation=None)
     
-# FC layer
-outputs = tf.contrib.layers.fully_connected(outputs[:,-1], num_classes, activation_fn=None)
-
-outputs1 = tf.convert_to_tensor(outputs,name="y_pred")
+    outputs1 = tf.layers.dense(inputs=hidden,units=200)
 
 
 
-## sequence_loss = tf.contrib.seq2seq.sequence_loss(logits=outputs, targets=Y, weights=weights)
+    ## sequence_loss = tf.contrib.seq2seq.sequence_loss(logits=outputs, targets=Y, weights=weights)
 
-sequence_loss = tf.reduce_sum(tf.square(outputs1 - Y_)) 
+    sequence_loss = tf.reduce_sum(tf.square(outputs1 - Y_)) 
 
-train_op = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(sequence_loss)
+    train_op = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(sequence_loss)
 with tf.Session() as sess:
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
@@ -97,7 +102,7 @@ with tf.Session() as sess:
     print("학습시작")
     for i in range(300):
         tot_cost = 0
-        for j in range(10000):
+        for j in range(50):
             _, l, results = sess.run([train_op, sequence_loss, outputs])
             tot_cost += l
         sys.stdout.write("Iter: {}, Loss: {:.4f}".format(i, tot_cost))
