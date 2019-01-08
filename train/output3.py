@@ -4,6 +4,7 @@ import tensorflow as tf
 # Basic model parameters as external flags.
 flags = tf.app.flags
 FLAGS = flags.FLAGS
+flags.DEFINE_string('input_dir', 'input', 'Input Directory.')
 flags.DEFINE_string('output_dir', 'output', 'Output Directory.')
 
 
