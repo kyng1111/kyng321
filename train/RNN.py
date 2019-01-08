@@ -5,6 +5,7 @@ Created on Sun Jan  6 15:36:15 2019
 @author: Kyungmin Park
 """
 
+import sys
 import tensorflow as tf
 import numpy as np
 from tensorflow.contrib import rnn
@@ -99,7 +100,7 @@ with tf.Session() as sess:
         for j in range(10000):
             _, l, results = sess.run([train_op, sequence_loss, outputs])
             tot_cost += l
-        print("Iter: {}, Loss: {:.4f}".format(i, tot_cost)
+        sys.stdout.write("Iter: {}, Loss: {:.4f}".format(i, tot_cost))
         
     saver = tf.train.Saver()    
     checkpoint_file = os.path.join(FLAGS.output_dir, 'RNN_check')
