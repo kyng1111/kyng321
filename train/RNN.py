@@ -23,6 +23,10 @@ tf.reset_default_graph()
 
 tf.set_random_seed(777)  # reproducibility
 
+flags = tf.app.flags
+FLAGS = flags.FLAGS
+flags.DEFINE_string('input_dir', 'input', 'Input Directory.')
+flags.DEFINE_string('output_dir', 'output', 'Output Directory.')
 
 data_dim = 200
 hidden_size = 10
@@ -30,7 +34,9 @@ num_classes = 200
 learning_rate = 0.01
 
 
-a = unpickle("gs://dumo1/input/final_input.txt")
+input_path = os.path.join(FLAGS.input_dir, 'final_input.txt')
+a = unpickle(input_path)
+
 dataX = np.array(a).reshape(-1,200)
 
 tempX = []
@@ -96,8 +102,9 @@ with tf.Session() as sess:
             print(str(i)+"-"+str(j))
         print(str(i), str(tot_cost))
         
-    saver = tf.train.Saver()
-    saver.save(sess, "gs://dumo1/output/checkpoint",global_step=0)
+    saver = tf.train.Saver()    
+    checkpoint_file = os.path.join(FLAGS.output_dir, 'RNN_check')
+    saver.save(sess, checkpoint_file,global_step=0)
     
 '''   
 # Let's print the last char of each result to check it works
