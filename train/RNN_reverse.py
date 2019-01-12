@@ -40,7 +40,7 @@ num_classes = 200
 learning_rate = 0.01
 
 
-input_path = os.path.join(FLAGS.input_dir, 'real_final.txt')
+input_path = os.path.join(FLAGS.input_dir, 'real_final00.txt')
 a = unpickle(input_path)
 dataX2 = np.array(a).reshape(-1,162)
 
