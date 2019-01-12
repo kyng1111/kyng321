@@ -34,11 +34,6 @@ FLAGS = flags.FLAGS
 flags.DEFINE_string('input_dir', 'input', 'Input Directory.')
 flags.DEFINE_string('output_dir', 'output', 'Output Directory.')
 
-data_dim = 200
-hidden_size = 10
-num_classes = 200
-learning_rate = 0.01
-
 
 input_path = os.path.join(FLAGS.input_dir, 'real_final.txt')
 a = unpickle(input_path)
@@ -56,7 +51,7 @@ testY2 = []
 
 for i in range(0,len(dataX2) - 5):
     _x = dataX2[i:i+5]
-    _y = dataX2[i+5][100:]
+    _y = dataX2[i+5][:100]
     tempX2.append(_x)
     tempY2.append(_y)
     
@@ -77,7 +72,7 @@ print(testY2.shape)
 
 data_dim = 162
 hidden_size = 5
-num_classes = 62
+num_classes = 100
 learning_rate = 0.01
 
 batch_size = len(testX2)
@@ -103,7 +98,7 @@ with tf.variable_scope("rnn1"):
     outputs, _states = tf.nn.dynamic_rnn(multi_cells, X_, dtype=tf.float32)
 
     # FC layer
-    outputs = tf.contrib.layers.fully_connected(outputs[:,-1], num_classes, activation_fn=tf.nn.sigmoid)
+    outputs = tf.contrib.layers.fully_connected(outputs[:,-1], num_classes, activation_fn=tf.nn.tanh)
 
     outputs1 = tf.convert_to_tensor(outputs,name="y_pred")
 
@@ -111,14 +106,14 @@ with tf.variable_scope("rnn1"):
 
     ## sequence_loss = tf.contrib.seq2seq.sequence_loss(logits=outputs, targets=Y, weights=weights)
 
-    sequence_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=outputs1, labels=Y_))
+    sequence_loss = tf.reduce_sum(tf.square(outputs1 - Y_))
 
     train_op = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(sequence_loss)
 with tf.Session() as sess:
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
     sess.run(dataset_init_op, feed_dict = {X:testX2, Y:testY2})
-    print("학습시작")
+    print("starts")
     for i in range(1000):
         tot_cost = 0
         for j in range(156):
@@ -128,7 +123,7 @@ with tf.Session() as sess:
             print("Iter: {}, Loss: {:.4f}".format(i, tot_cost))
         
     saver = tf.train.Saver()    
-    checkpoint_file = os.path.join(FLAGS.output_dir, 'RNN_reverse')
+    checkpoint_file = os.path.join(FLAGS.output_dir, 'RNN_reverse_word')
     saver.save(sess, checkpoint_file,global_step=0)
     
 '''   
