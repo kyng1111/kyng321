@@ -56,7 +56,7 @@ testY2 = []
 
 for i in range(0,len(dataX2) - 5):
     _x = dataX2[i:i+5]
-    _y = dataX2[i+5][:100]
+    _y = dataX2[i+5][100:]
     tempX2.append(_x)
     tempY2.append(_y)
     
