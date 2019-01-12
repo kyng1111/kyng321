@@ -111,7 +111,7 @@ with tf.variable_scope("rnn1"):
 
     ## sequence_loss = tf.contrib.seq2seq.sequence_loss(logits=outputs, targets=Y, weights=weights)
 
-    sequence_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=outputs1, labels=Y_))) 
+    sequence_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=outputs1, labels=Y_))
 
     train_op = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(sequence_loss)
 with tf.Session() as sess:
