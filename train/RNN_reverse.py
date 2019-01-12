@@ -40,31 +40,52 @@ num_classes = 200
 learning_rate = 0.01
 
 
-input_path = os.path.join(FLAGS.input_dir, 'final_input.txt')
+input_path = os.path.join(FLAGS.input_dir, 'real_final.txt')
 a = unpickle(input_path)
+dataX2 = np.array(a).reshape(-1,162)
 
-dataX = np.array(a).reshape(-1,200)
+dataX2 = dataX2[::-1]
 
-tempX = []
-tempY = []
+print(len(dataX2))
 
-for i in range(0,len(dataX) - 10):
-    _x = dataX[i:i+10]
-    _y = dataX[i+10]
-    tempX.append(_x)
-    tempY.append(_y)
+tempX2 = []
+tempY2 = []
 
-testX = np.array(tempX)
-testY = np.array(tempY)
-print(testX.shape)
-print(testY.shape)
+testX2 = []
+testY2 = []
 
-batch_size = len(testX)
+for i in range(0,len(dataX2) - 5):
+    _x = dataX2[i:i+5]
+    _y = dataX2[i+5][:100]
+    tempX2.append(_x)
+    tempY2.append(_y)
+    
+del dataX2
+print('1')
+testX2 = np.array(tempX2)
+testY2 = np.array(tempY2)
+
+
+print("2")
+
+tf.reset_default_graph()
+
+tf.set_random_seed(777)  # reproducibility
+
+print(testX2.shape)
+print(testY2.shape)
+
+data_dim = 162
+hidden_size = 5
+num_classes = 62
+learning_rate = 0.01
+
+batch_size = len(testX2)
 
 
 with tf.variable_scope("rnn1"):
-    X = tf.placeholder(tf.float32, [None,10,200],name = 'x_data')
-    Y = tf.placeholder(tf.float32, [None,200],name = 'y_data')
+    X = tf.placeholder(tf.float32, [None,5,data_dim],name = 'x_data')
+    Y = tf.placeholder(tf.float32, [None,num_classes],name = 'y_data')
 
     dataset = tf.data.Dataset.from_tensor_slices((X,Y))
     dataset = dataset.repeat()
@@ -76,40 +97,38 @@ with tf.variable_scope("rnn1"):
     X_, Y_ = iter.get_next()
 
 
-    multi_cells = rnn.MultiRNNCell([lstm_cell() for _ in range(2)], state_is_tuple=True)
+    multi_cells = rnn.MultiRNNCell([lstm_cell() for _ in range(5)], state_is_tuple=True)
 
     # outputs: unfolding size x hidden size, state = hidden size
     outputs, _states = tf.nn.dynamic_rnn(multi_cells, X_, dtype=tf.float32)
 
     # FC layer
-    outputs = tf.contrib.layers.fully_connected(outputs[:,-1], num_classes, activation_fn=None)
+    outputs = tf.contrib.layers.fully_connected(outputs[:,-1], num_classes, activation_fn=tf.nn.sigmoid)
 
-    hidden = tf.layers.dense(inputs=outputs,units=200,activation=None)
-    
-    outputs1 = tf.layers.dense(inputs=hidden,units=200)
+    outputs1 = tf.convert_to_tensor(outputs,name="y_pred")
 
 
 
     ## sequence_loss = tf.contrib.seq2seq.sequence_loss(logits=outputs, targets=Y, weights=weights)
 
-    sequence_loss = tf.reduce_sum(tf.square(outputs1 - Y_)) 
+    sequence_loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=outputs1, labels=Y_))) 
 
     train_op = tf.train.AdamOptimizer(learning_rate=learning_rate).minimize(sequence_loss)
 with tf.Session() as sess:
     sess = tf.Session()
     sess.run(tf.global_variables_initializer())
-    sess.run(dataset_init_op, feed_dict = {X:testX, Y:testY})
+    sess.run(dataset_init_op, feed_dict = {X:testX2, Y:testY2})
     print("학습시작")
-    for i in range(300):
+    for i in range(1000):
         tot_cost = 0
-        for j in range(50):
+        for j in range(156):
             _, l, results = sess.run([train_op, sequence_loss, outputs])
             tot_cost += l
-        if i==299:
+        if i==999:
             print("Iter: {}, Loss: {:.4f}".format(i, tot_cost))
         
     saver = tf.train.Saver()    
-    checkpoint_file = os.path.join(FLAGS.output_dir, 'RNN_check')
+    checkpoint_file = os.path.join(FLAGS.output_dir, 'RNN_reverse')
     saver.save(sess, checkpoint_file,global_step=0)
     
 '''   
