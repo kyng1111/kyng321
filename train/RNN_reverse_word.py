@@ -35,7 +35,7 @@ flags.DEFINE_string('input_dir', 'input', 'Input Directory.')
 flags.DEFINE_string('output_dir', 'output', 'Output Directory.')
 
 
-input_path = os.path.join(FLAGS.input_dir, 'real_final.txt')
+input_path = os.path.join(FLAGS.input_dir, 'real_final01.txt')
 a = unpickle(input_path)
 dataX2 = np.array(a).reshape(-1,162)
 
